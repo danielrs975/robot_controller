@@ -6,6 +6,7 @@ NOTE: Needs to be adapted after to the physical robot way to move
 import roslibpy
 import time
 
+from robots.actions.move import execute_move
 '''
 Class that represents the robot Giraff. This is the version 1.
 '''
@@ -28,6 +29,12 @@ class Giraff():
     '''
     def __init__(self, client):
         self.move_topic = roslibpy.Topic(client, '/cmd_vel', 'geometry_msgs/Twist')
+
+    '''
+    Move the robot in the given direction
+    '''
+    def move_robot(self, move):
+        execute_move(move, self.move_topic)
 
     '''
     Move to the left the robot for 2 seconds and then stop

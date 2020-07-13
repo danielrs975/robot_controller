@@ -40,19 +40,8 @@ if __name__ == '__main__':
         '''
         Accept input from the user
         '''
-        move_selected = input('Select a move (l-left, r-right, b-backward, f-forward) and press enter or exit (e): ')
-        if move_selected == 'e':
-            break
-        elif move_selected == 'l':
-            giraff_controller.move_left()
-        elif move_selected == 'r':
-            giraff_controller.move_right()
-        elif move_selected == 'b':
-            giraff_controller.move_backward()
-        elif move_selected == 'f':
-            giraff_controller.move_forward()
-        else:
-            print('Invalid movement try again')
+        move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward) and press enter or exit (e): '))
+        giraff_controller.move_robot(move_selected)
 
     disconnect_of_ros(giraff_controller, client)
     print('Exiting the robots controller')
