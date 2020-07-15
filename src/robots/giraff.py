@@ -13,19 +13,6 @@ from robots.actions.camera import take_picture
 Class that represents the robot Giraff. This is the version 1.
 '''
 class Giraff():
-    STOP = {
-        'linear': {
-            'y': 0.0, 
-            'x': 0.0, 
-            'z': 0.0
-        }, 
-        'angular': {
-            'y': 0.0, 
-            'x': 0.0, 
-            'z': 0.0
-        }
-    }
-
     '''
     Constructor of Giraff
     '''
