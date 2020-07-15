@@ -30,5 +30,5 @@ Input
 '''
 def take_picture(camera_topic):
     camera_topic.subscribe(receive_image)
-    time.sleep(1)
-    camera_topic.unsubscribe()
+    time.sleep(0.15)
+    camera_topic.unsubscribe() # This avoid to take many photos after one movement
