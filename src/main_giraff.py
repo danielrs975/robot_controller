@@ -5,7 +5,9 @@ this software only controls the simulation robot.
 import roslibpy
 import logging
 import time
+import numpy as np
 from robots.giraff import Giraff # Importing giraff
+from envs.giraff_env import GiraffEnv
 
 # Print important information (Debug purpose only)
 fmt = "%(asctime)s %(levelname)8s: %(message)s"
@@ -34,14 +36,12 @@ def disconnect_of_ros(robot, client):
 if __name__ == '__main__':
     client = connect_to_ros()
     giraff_controller = Giraff(client)
-
     client.run() # Running the main loop
-    while client.is_connected:
-        '''
-        Accept input from the user
-        '''
-        move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward) and press enter or exit (e): '))
-        giraff_controller.move_robot(move_selected)
+    env = GiraffEnv(giraff_controller)
+    
+    for i in range(100):
+        env.step(np.random.randint(4))
+        env.render()
 
     disconnect_of_ros(giraff_controller, client)
     print('Exiting the robots controller')

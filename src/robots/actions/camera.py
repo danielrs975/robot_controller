@@ -20,7 +20,8 @@ def receive_image(msg):
     log.info('Received image seq=%d', msg['header']['seq'])
     base64_bytes = msg['data'].encode('ascii')
     image_bytes = base64.b64decode(base64_bytes)
-    with open('received-image-{}-{}'.format(msg['header']['seq'], msg['format']), 'wb') as image_file:
+    # 'received-image-{}-{}'.format(msg['header']['seq'], msg['format'])
+    with open('env_observation', 'wb') as image_file:
         image_file.write(image_bytes)
 
 '''
@@ -30,5 +31,5 @@ Input
 '''
 def take_picture(camera_topic):
     camera_topic.subscribe(receive_image)
-    time.sleep(0.15)
+    time.sleep(1)
     camera_topic.unsubscribe() # This avoid to take many photos after one movement

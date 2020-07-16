@@ -22,6 +22,7 @@ return client ----> it is the socket connection
 '''
 def connect_to_ros():
     client = roslibpy.Ros(host=HOST, port=PORT)
+    client.run()
     return client
 
 '''
@@ -34,15 +35,11 @@ def disconnect_of_ros(robot, client):
 if __name__ == '__main__':
     client = connect_to_ros()
     bebop_controller = Bebop(client)
+    
+    bebop_controller.takeoff()
 
-    client.run() # Running the main loop
-    while client.is_connected:
-        '''
-        Accept input from the user
-        '''
-        print('Running bebop controller')
-        # move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward) and press enter or exit (e): '))
-        # bebop_controller.move_robot(move_selected)
+    # move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward) and press enter or exit (e): '))
+    # bebop_controller.move_robot(move_selected)
 
-    disconnect_of_ros(bebop_controller, client)
+    # disconnect_of_ros(bebop_controller, client)
     print('Exiting the robots controller')
