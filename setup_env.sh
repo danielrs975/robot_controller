@@ -8,33 +8,33 @@ wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 
 sudo apt update -y
-echo 'Installing packages'
+echo '----------------------------------------------Installing packages----------------------------------------------'
 sudo apt install -y ros-melodic-desktop-full
 
-echo 'Configuring environment'
+echo '----------------------------------------------Configuring environment----------------------------------------------'
 echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 
-echo 'Installing python dependecies'
+echo '----------------------------------------------Installing python dependecies----------------------------------------------'
 sudo apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
 
-echo 'Configuring ROS'
+echo '----------------------------------------------Configuring ROS----------------------------------------------'
 sudo rosdep init
 rosdep update
 
-echo 'Installing ROS Bridge'
+echo '----------------------------------------------Installing ROS Bridge----------------------------------------------'
 sudo apt-get install ros-melodic-rosbridge-suite -y
 
-echo 'Installing Gazebo'
+echo '----------------------------------------------Installing Gazebo----------------------------------------------'
 
 sudo apt-get install gazebo9 libgazebo9-dev -y
 
-echo 'Connecting gazebo with ros'
+echo '----------------------------------------------Connecting gazebo with ros----------------------------------------------'
 sudo apt-get install ros-melodic-gazebo-ros-pkgs ros-melodic-gazebo-ros-control -y
 
-echo 'Removing unnecessary files'
+echo '----------------------------------------------Removing unnecessary files----------------------------------------------'
 sudo apt autoremove -y
 
-echo 'Installation finished'
+echo '----------------------------------------------Installation finished----------------------------------------------'
 
-echo 'Activating environment'
+echo '----------------------------------------------Activating environment----------------------------------------------'
 source ~/.bashrc
