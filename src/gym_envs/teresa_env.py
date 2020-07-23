@@ -1,5 +1,5 @@
 '''
-Gym environment for the Giraff robot
+Gym environment for the Teresa robot
 ToDo: 
     - Define what are the states/observations
 '''
@@ -9,12 +9,12 @@ from gym import spaces
 
 N_DISCRETE_ACTIONS = 4
 
-class GiraffEnv(gym.Env):
+class TeresaEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, giraff):
-        super(GiraffEnv, self).__init__()
-        self.giraff = giraff
+    def __init__(self, teresa):
+        super(TeresaEnv, self).__init__()
+        self.teresa = teresa
         self.state = 0
         self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
     
@@ -23,7 +23,7 @@ class GiraffEnv(gym.Env):
         done = 0 # Boolean that indicates that an episode has finished
 
         # Execute move
-        self.giraff.move_robot(action)
+        self.teresa.move_robot(action)
         
         '''
         In here we identify if the object we want to follow is in sight or no. This is

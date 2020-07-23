@@ -6,8 +6,8 @@ import roslibpy
 import logging
 import time
 import numpy as np
-from robots.giraff import Giraff # Importing giraff
-from envs.giraff_env import GiraffEnv
+from robots.Teresa import Teresa # Importing Teresa
+from gym_envs.teresa_env import TeresaEnv
 
 # Print important information (Debug purpose only)
 fmt = "%(asctime)s %(levelname)8s: %(message)s"
@@ -35,14 +35,14 @@ def disconnect_of_ros(robot, client):
 
 if __name__ == '__main__':
     client = connect_to_ros()
-    giraff_controller = Giraff(client)
+    teresa_controller = Teresa(client)
     client.run() # Running the main loop
-    env = GiraffEnv(giraff_controller)
+    env = TeresaEnv(teresa_controller)
     
     for i in range(100):
         env.step(np.random.randint(4))
         env.render()
 
-    disconnect_of_ros(giraff_controller, client)
+    disconnect_of_ros(teresa_controller, client)
     print('Exiting the robots controller')
     

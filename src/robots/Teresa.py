@@ -10,9 +10,9 @@ from robots.actions.move import execute_move
 from robots.actions.camera import take_picture
 
 
-class Giraff():
+class Teresa():
     '''
-    Class that represents the robot Giraff. This is the version 1.
+    Class that represents the robot Teresa. This is the version 1.
     '''
     def __init__(self, client):
         '''
