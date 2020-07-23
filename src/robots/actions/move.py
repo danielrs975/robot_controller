@@ -5,7 +5,9 @@ in a 2D space
 import roslibpy
 import time
 
-EXECUTION_TIME = 1 # Time between each command (seconds)
+EXECUTION_TIME = 1.5 # Time between each command (seconds)
+LINEAR_SPEED = 0.5
+ROTATION_SPEED = 1.0
 
 '''
 Array that contains all the posible movements of the robot, now it is only 4
@@ -14,7 +16,7 @@ Array that contains all the posible movements of the robot, now it is only 4
               |
               |
               |
-    0         |          1
+    1         |          0
     --------------------->
               |         x
               |
@@ -22,16 +24,43 @@ Array that contains all the posible movements of the robot, now it is only 4
               | 2
             
 These are the posible movements: (The numbers representes the index in the array)
-    0 left
-    1 right
+    0 rotate right
+    1 rotate left
     2 backwards
     3 forward
 '''
 POSSIBLE_MOVES = [
+    # Rotate Right
     {
         'linear': {
-            'y': 1.0, 
+            'y': 0.0, 
             'x': 0.0, 
+            'z': 0.0
+        }, 
+        'angular': {
+            'y': ROTATION_SPEED, 
+            'x': ROTATION_SPEED, 
+            'z': ROTATION_SPEED
+        }
+    },
+    # Rotate Left
+    {
+        'linear': {
+            'y': 0.0, 
+            'x': 0.0, 
+            'z': 0.0
+        }, 
+        'angular': {
+            'y': -ROTATION_SPEED, 
+            'x': -ROTATION_SPEED, 
+            'z': -ROTATION_SPEED
+        }
+    },
+    # Move Backward
+    {
+        'linear': {
+            'y': 0.0, 
+            'x': -LINEAR_SPEED, 
             'z': 0.0
         }, 
         'angular': {
@@ -40,34 +69,11 @@ POSSIBLE_MOVES = [
             'z': 0.0
         }
     },
-    {
-        'linear': {
-            'y': -1.0, 
-            'x': 0.0, 
-            'z': 0.0
-        }, 
-        'angular': {
-            'y': 0.0, 
-            'x': 0.0, 
-            'z': 0.0
-        }
-    },
+    # Move Forward
     {
         'linear': {
             'y': 0.0, 
-            'x': -1.0, 
-            'z': 0.0
-        }, 
-        'angular': {
-            'y': 0.0, 
-            'x': 0.0, 
-            'z': 0.0
-        }
-    },
-    {
-        'linear': {
-            'y': 0.0, 
-            'x': 1.0, 
+            'x': LINEAR_SPEED, 
             'z': 0.0
         }, 
         'angular': {
