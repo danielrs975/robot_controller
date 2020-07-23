@@ -7,8 +7,6 @@ import cv2
 import gym
 from gym import spaces
 
-N_DISCRETE_ACTIONS = 4
-
 class TeresaEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
@@ -16,7 +14,7 @@ class TeresaEnv(gym.Env):
         super(TeresaEnv, self).__init__()
         self.teresa = teresa
         self.state = 0
-        self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
+        self.action_space = spaces.Discrete(teresa.NUMBER_MOVEMENTS)
     
     def step(self, action):
         reward = 0 # Reward of the state
