@@ -1,7 +1,7 @@
-'''
+"""
 The main of the program to control the robot. For now
 this software only controls the simulation robot.
-'''
+"""
 import roslibpy
 import logging
 import time
@@ -18,17 +18,17 @@ log = logging.getLogger(__name__)
 PORT = 9090
 HOST = 'localhost'
 
-'''
+"""
 Make connection to ROS Server
 return client ----> it is the socket connection
-'''
+"""
 def connect_to_ros():
     client = roslibpy.Ros(host=HOST, port=PORT)
     return client
 
-'''
+"""
 Disconnect from the ROS Server
-'''
+"""
 def disconnect_of_ros(robot, client):
     robot.remove_subscribers()
     client.close()
