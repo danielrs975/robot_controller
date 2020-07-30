@@ -16,6 +16,7 @@ class Robot():
     def __init__(self, client, camera_name, move_topic, movements):
         '''
         Constructor
+        - camera_name ()
         '''
         self.movements = movements
         self.camera_topic = roslibpy.Topic(client, '{}/image_raw/compressed'.format(camera_name), 'sensor_msgs/CompressedImage')
