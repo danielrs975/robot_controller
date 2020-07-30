@@ -7,30 +7,87 @@ import roslibpy
 import time
 
 from robots.Robot import Robot
-from robots.actions.move import execute_move
-from robots.actions.camera import take_picture
 
 class Teresa(Robot):
-    NUMBER_MOVEMENTS = 4 # Movements that the robot can made
     '''
     Class that represents the robot Teresa. This is the version 1.
     '''
+    LINEAR_SPEED = 0.5 # Speed to move forward or backward
+    ROTATION_SPEED = 1.0
+
+    '''
+    Array that contains all the posible movements of the robot.
+    These are the posible movements: (The numbers representes the index in the array)
+        0 rotate right
+        1 rotate left
+        2 backwards
+        3 forward
+    '''
+    POSSIBLE_MOVES = [
+        # Rotate Right
+        {
+            'linear': {
+                'y': 0.0, 
+                'x': 0.0, 
+                'z': 0.0
+            }, 
+            'angular': {
+                'y': ROTATION_SPEED, 
+                'x': ROTATION_SPEED, 
+                'z': ROTATION_SPEED
+            }
+        },
+        # Rotate Left
+        {
+            'linear': {
+                'y': 0.0, 
+                'x': 0.0, 
+                'z': 0.0
+            }, 
+            'angular': {
+                'y': -ROTATION_SPEED, 
+                'x': -ROTATION_SPEED, 
+                'z': -ROTATION_SPEED
+            }
+        },
+        # Move Backward
+        {
+            'linear': {
+                'y': 0.0, 
+                'x': -LINEAR_SPEED, 
+                'z': 0.0
+            }, 
+            'angular': {
+                'y': 0.0, 
+                'x': 0.0, 
+                'z': 0.0
+            }
+        },
+        # Move Forward
+        {
+            'linear': {
+                'y': 0.0, 
+                'x': LINEAR_SPEED, 
+                'z': 0.0
+            }, 
+            'angular': {
+                'y': 0.0, 
+                'x': 0.0, 
+                'z': 0.0
+            }
+        }
+    ]
+    NUMBER_MOVEMENTS = len(POSSIBLE_MOVES)
+    
+    MOVE_TOPIC = {
+        'topic_name': '/cmd_vel',
+        'msg_type': 'geometry_msgs/Twist'
+    }
+
     def __init__(self, client):
         '''
         Constructor of Giraff
         '''
-        super(Teresa, self).__init__(client, '/teresa_robot/head_camera')
-        self.move_topic = roslibpy.Topic(client, '/cmd_vel', 'geometry_msgs/Twist')
-
-    def move_robot(self, move):
-        '''
-        Move the robot in the given direction
-        '''
-        execute_move(move, self.move_topic)
-        take_picture(self.camera_topic)
-
-    def remove_subscribers(self):
-        '''
-        Remove the listeners to the topics of the robot
-        '''
-        self.move_topic.unadvertise()
+        
+        super(Teresa, self).__init__(client, '/teresa_robot/head_camera', self.MOVE_TOPIC, self.POSSIBLE_MOVES)
+        # self.move_topic = roslibpy.Topic(client, '/cmd_vel', 'geometry_msgs/Twist')

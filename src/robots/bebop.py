@@ -35,6 +35,10 @@ XMP_TAGS_OF_INTEREST = (
     "GPSAltitude",
 )
 
+
+# To control the bebop simulation the following topic is used
+#   /bebop/command/trajectory
+
 class Bebop():
     def __init__(self, client):
         '''
@@ -64,6 +68,7 @@ class Bebop():
         '''
         This method take a photo of the environment
         '''
+
         # take a photo burst and get the associated media_id
         photo_saved = self.drone(photo_progress(result="photo_saved", _policy="wait"))
         self.drone(take_photo(cam_id=0)).wait()

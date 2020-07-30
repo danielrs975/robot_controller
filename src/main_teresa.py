@@ -38,10 +38,14 @@ if __name__ == '__main__':
     teresa_controller = Teresa(client)
     client.run() # Running the main loop
     env = TeresaEnv(teresa_controller)
-    
-    for i in range(100):
-        env.step(np.random.randint(4))
+
+    while True:
+        move = int(input('Introduce a movement (0.- Rotate right, 1.- Rotate left, 2.- Move backward, 3.- Move forward): '))
+        teresa_controller.move_robot(move)
         env.render()
+    # for i in range(100):
+    #     env.step(np.random.randint(4))
+    #     env.render()
 
     disconnect_of_ros(teresa_controller, client)
     print('Exiting the robots controller')
