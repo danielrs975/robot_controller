@@ -22,15 +22,24 @@ class Teresa(Robot):
         1 rotate left
         2 backwards
         3 forward
+
+    Note: the message of type geometry_msgs/Twist has the following structure
+    {
+        'linear': {
+            'x': Float,
+            'y': Float,
+            'z': Float
+        },
+        'angular': {
+            'x': Float,
+            'y': Float,
+            'z': Float
+        }
+    }
     """
     POSSIBLE_MOVES = [
         # Rotate Right
         {
-            'linear': {
-                'y': 0.0, 
-                'x': 0.0, 
-                'z': 0.0
-            }, 
             'angular': {
                 'y': ROTATION_SPEED, 
                 'x': ROTATION_SPEED, 
@@ -39,11 +48,6 @@ class Teresa(Robot):
         },
         # Rotate Left
         {
-            'linear': {
-                'y': 0.0, 
-                'x': 0.0, 
-                'z': 0.0
-            }, 
             'angular': {
                 'y': -ROTATION_SPEED, 
                 'x': -ROTATION_SPEED, 
@@ -53,28 +57,14 @@ class Teresa(Robot):
         # Move Backward
         {
             'linear': {
-                'y': 0.0, 
                 'x': -LINEAR_SPEED, 
-                'z': 0.0
             }, 
-            'angular': {
-                'y': 0.0, 
-                'x': 0.0, 
-                'z': 0.0
-            }
         },
         # Move Forward
         {
             'linear': {
-                'y': 0.0, 
                 'x': LINEAR_SPEED, 
-                'z': 0.0
-            }, 
-            'angular': {
-                'y': 0.0, 
-                'x': 0.0, 
-                'z': 0.0
-            }
+            } 
         }
     ]
     NUMBER_MOVEMENTS = len(POSSIBLE_MOVES)
