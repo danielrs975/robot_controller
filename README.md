@@ -35,7 +35,7 @@ This has to be in 4 different terminals (Wait until each of the first 3 commands
 1) First terminal ```roscore```
 2) Second terminal: ```roslaunch teresa_gazebo teresa_gazebo_mopomdp.launch```
 3) Third terminal: ```roslaunch rosbridge_server rosbridge_websocket.launch```
-4) Fourth terminal: ```python src/main_giraff.py```
+4) Fourth terminal: first ```source venv/bin/activate``` then ```python src/main_teresa.py```
 
 ## Author
 - Daniel Rodriguez
