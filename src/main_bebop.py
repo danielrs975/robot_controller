@@ -6,7 +6,7 @@ import logging
 import time
 import roslibpy
 import numpy as np
-from gym_envs.teresa_env import TeresaEnv
+from gym_envs.RobotEnv import RobotEnv
 from robots.Bebop import Bebop # Importing Bebop controller
 
 # Print important information (Debug purpose only)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     client = connect_to_ros()
     bebop_controller = Bebop(client)
     client.run()
-    env = TeresaEnv(bebop_controller)
+    env = RobotEnv(bebop_controller)
     bebop_controller.land()
     type_of_control = int(input('Introduce type of control for the robot (0.- Manual, 1.- Automatic): '))
 

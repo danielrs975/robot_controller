@@ -7,7 +7,7 @@ import logging
 import time
 import numpy as np
 from robots.Teresa import Teresa # Importing Teresa
-from gym_envs.teresa_env import TeresaEnv
+from gym_envs.RobotEnv import RobotEnv
 
 # Print important information (Debug purpose only)
 fmt = "%(asctime)s %(levelname)8s: %(message)s"
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     client = connect_to_ros()
     teresa_controller = Teresa(client)
     client.run() # Running the main loop
-    env = TeresaEnv(teresa_controller)
+    env = RobotEnv(teresa_controller)
     type_of_control = int(input('Introduce type of control for the robot (0.- Manual, 1.- Automatic): '))
 
     if (type_of_control == 0):
