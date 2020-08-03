@@ -37,5 +37,25 @@ This has to be in 4 different terminals (Wait until each of the first 3 commands
 3) Third terminal: ```roslaunch rosbridge_server rosbridge_websocket.launch```
 4) Fourth terminal: first ```source venv/bin/activate``` then ```python src/main_teresa.py```
 
+### For the Bebop 2 Power Drone
+#### Prerequisites
+To run this environment you need to install some programs:
+- Sphinx Parrot-Simulator. [See instructions here](https://developer.parrot.com/docs/sphinx/installation.html)
+- Bebop autonomy ros package. [See instructions here](https://bebop-autonomy.readthedocs.io/en/latest/installation.html)
+- Nvidia drivers (Version 435, this is important for the simulation)
+
+IMPORTANT:
+- Be sure that you are using your nvidia graphic card. Run the command ```nvidia-settings```
+
+#### Executing the simulation
+This has to be in 5 different terminals in this order:
+1) First terminal: ```roscore```
+2) Second terminal: ```sudo firmwared```
+3) Third terminal: ```sphinx /opt/parrot-sphinx/usr/share/sphinx/drones/bebop2.drone::with_front_cam=true::stolen_interface=```
+4) Fourth terminal: ```roslaunch rosbridge_server rosbridge_websocket.launch```
+5) Fifth terminal: ```roslaunch bebop_driver bebop_node.launch```
+
+After you run these commands, execute the python script ```python src/main_bebop.py```
+
 ## Author
 - Daniel Rodriguez
