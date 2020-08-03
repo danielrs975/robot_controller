@@ -7,21 +7,21 @@ import cv2
 import gym
 from gym import spaces
 
-class TeresaEnv(gym.Env):
+class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, teresa):
-        super(TeresaEnv, self).__init__()
-        self.teresa = teresa
+    def __init__(self, robot):
+        super(RobotEnv, self).__init__()
+        self.robot = robot
         self.state = 0
-        self.action_space = spaces.Discrete(teresa.NUMBER_MOVEMENTS)
+        self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
     
     def step(self, action):
         reward = 0 # Reward of the state
         done = 0 # Boolean that indicates that an episode has finished
 
         # Execute move
-        self.teresa.move_robot(action)
+        self.robot.move_robot(action)
         
         '''
         In here we identify if the object we want to follow is in sight or no. This is
