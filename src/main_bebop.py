@@ -50,7 +50,7 @@ if __name__ == '__main__':
                 break
             move_selected = int(move_selected)
             bebop_controller.move_robot(move_selected)
-            # env.render()
+            env.render()
     else:
         for i in range(100):
             env.step(np.random.randint(4))
