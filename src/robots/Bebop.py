@@ -33,12 +33,15 @@ class Bebop(Robot):
         'y': 0.0,
         'z': 0.0
     }
-
+    ANGULAR_POSITION = {
+        'x': 0.0,
+        'y': 0.0
+    }
     MOVE_TOPIC = {
         'topic_name': '/bebop/command/trajectory',
         'msg_type': 'trajectory_msgs/MultiDOFJointTrajectory'
     }
-    NUMBER_MOVEMENTS = 4
+    NUMBER_MOVEMENTS = 6
 
     def __init__(self, client):
         """
@@ -54,6 +57,10 @@ class Bebop(Robot):
         execute_move(create_msg(self.POSITION), self.move_topic)
 
     def move_robot(self, move):
+        """
+        Overwrite the move_robot function of super class Robot to adapt
+        to the Bebop 2 drone simulation
+        """
         if move == 0:
             # Move left
             self.POSITION['y'] += self.STEP_FOR_MOVEMENT
@@ -66,7 +73,12 @@ class Bebop(Robot):
         elif move == 3:
             # Move backward
             self.POSITION['x'] += self.STEP_FOR_MOVEMENT
-
+        elif move == 4:
+            # Move up
+            self.POSITION['z'] += self.STEP_FOR_MOVEMENT
+        elif move == 5:
+            # Move down
+            self.POSITION['z'] -= self.STEP_FOR_MOVEMENT
         execute_move(create_msg(self.POSITION), self.move_topic)
         take_picture(self.camera_topic)
 

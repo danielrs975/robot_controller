@@ -44,7 +44,7 @@ if __name__ == '__main__':
     bebop_controller.takeoff()
     if (type_of_control == 0):
         while True:
-            move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward) and press enter or exit (e): '))
+            move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward, 4-up, 5-down) and press enter or exit (e): '))
             bebop_controller.move_robot(move_selected)
             # env.render()
     else:
