@@ -38,13 +38,17 @@ if __name__ == '__main__':
     bebop_controller = Bebop(client)
     client.run()
     env = RobotEnv(bebop_controller)
-    bebop_controller.land()
+    bebop_controller.takeoff()
     type_of_control = int(input('Introduce type of control for the robot (0.- Manual, 1.- Automatic): '))
 
     bebop_controller.takeoff()
     if (type_of_control == 0):
         while True:
-            move_selected = int(input('Select a move (0-left, 1-right, 2-backward, 3-forward, 4-up, 5-down) and press enter or exit (e): '))
+            move_selected = input('Select a move (0-rotate right, 1-rotate left, 2-backward, 3-forward, 4-left, 5-right, 6-up, 7-down) and press enter or exit (e): ')
+            if (move_selected == 'e'):
+                bebop_controller.land()
+                break
+            move_selected = int(move_selected)
             bebop_controller.move_robot(move_selected)
             # env.render()
     else:
