@@ -31,13 +31,14 @@ class RobotEnv(gym.Env):
         return self.state, reward, done, {}
 
     def reset(self):
+        self.robot.reset_simulation()
         self.state = ''
         self.last_u = None
 
         return self.state
 
     def render(self, mode='human'):
-        image = cv2.imread('./env_observation', 0)
+        image = cv2.imread('./env_observation')
         window_name = 'image'
         x, y = 0, 0 # Replace this by the actual square position
 

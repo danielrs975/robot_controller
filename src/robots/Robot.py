@@ -28,6 +28,7 @@ class Robot():
         self.movements = movements
         self.camera_topic = roslibpy.Topic(client, '{}/image_raw/compressed'.format(camera_name), 'sensor_msgs/CompressedImage')
         self.move_topic = roslibpy.Topic(client, move_topic['topic_name'], move_topic['msg_type'])
+        self.reset_service = roslibpy.Service(client, '/gazebo/reset_simulation', 'std_srvs/Empty')
 
     def move_robot(self, move):
         """
@@ -44,3 +45,11 @@ class Robot():
         Remove the listeners to the topics of the robot
         """
         self.move_topic.unadvertise()
+
+    def reset_simulation(self):
+        """
+        This is only for the simulated environment. It is to reset
+        the gazebo simulation.
+        """
+        request = roslibpy.ServiceRequest()
+        self.reset_service.call(request)
