@@ -916,7 +916,7 @@ class PendulumEnv(gym.Env):
 
 
 # Intitialize Camera and get a global variable camera
-camera=camera_initialization(camera)
+# camera=camera_initialization(camera)
 
 
 def angle_normalize(x):
