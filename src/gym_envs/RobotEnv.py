@@ -43,6 +43,9 @@ class RobotEnv(gym.Env):
         if len(face_locations) > 0:    
             y, _, _, x = face_locations[0]
             self.encode_pos(x, y)
+        else:
+            done = 1
+            reward = 0
 
         return self.state, reward, done, {}
 
