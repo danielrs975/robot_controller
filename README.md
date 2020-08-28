@@ -21,8 +21,8 @@ You must have installed:
 6) Install python dependecies. ```pip install -r requirements.txt```
 
 ## Running the environments
-### For the Teresa Robot (This part is not necessary if you are running the world inside the folder gazebo_envs/)
-#### Prerequisites
+### For the Teresa Robot
+#### Prerequisites (This part is not necessary if you are running the world inside the folder gazebo_envs/)
 Before running this environment we have to install all the controllers of the Teresa Robot, executes ```./install_teresa.sh```. 
 
 IMPORTANT: 
