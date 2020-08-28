@@ -38,6 +38,7 @@ if __name__ == '__main__':
     teresa_controller = Teresa(client)
     client.run() # Running the main loop
     env = RobotEnv(teresa_controller)
+    env.reset()
     type_of_control = int(input('Introduce type of control for the robot (0.- Manual, 1.- Automatic): '))
 
     if (type_of_control == 0):

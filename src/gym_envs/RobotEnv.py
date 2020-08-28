@@ -5,6 +5,7 @@ ToDo:
 '''
 import cv2
 import gym
+import face_recognition
 from gym import spaces
 
 class RobotEnv(gym.Env):
@@ -15,7 +16,17 @@ class RobotEnv(gym.Env):
         self.robot = robot
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
-    
+
+    def encode_pos(self, x, y):
+        image_size = 800
+        self.state = x*image_size + y
+
+    def decode_pos(self):
+        image_size = 800
+        x = self.state / image_size
+        y = self.state % image_size
+        return int(x), int(y)
+
     def step(self, action):
         reward = 0 # Reward of the state
         done = 0 # Boolean that indicates that an episode has finished
@@ -27,23 +38,31 @@ class RobotEnv(gym.Env):
         In here we identify if the object we want to follow is in sight or no. This is
         used to calculate the reward
         '''
+        image = face_recognition.load_image_file("env_observation")
+        face_locations = face_recognition.face_locations(image)
+        if len(face_locations) > 0:    
+            y, _, _, x = face_locations[0]
+            self.encode_pos(x, y)
+        else:
+            done = 1
+            reward = 0
 
         return self.state, reward, done, {}
 
     def reset(self):
-        self.state = ''
+        self.robot.reset_simulation()
+        self.state = 0
         self.last_u = None
 
         return self.state
 
     def render(self, mode='human'):
-        image = cv2.imread('./env_observation', 0)
+        image = cv2.imread('./env_observation')
         window_name = 'image'
-        x, y = 0, 0 # Replace this by the actual square position
+        x, y = self.decode_pos() # Replace this by the actual square position
 
         start_point = (x, y)
-
-        end_point = (x + 32, y + 32)
+        end_point = (x + 40, y + 40)
 
         color = (255, 0, 0)
 

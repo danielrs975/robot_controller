@@ -5,7 +5,7 @@ in a 2D space
 import roslibpy
 import time
 
-EXECUTION_TIME = 1.5 # Time between each command (seconds)
+EXECUTION_TIME = 0.3 # Time between each command (seconds)
 
 STOP_ROBOT = {
     'linear': {
@@ -30,4 +30,4 @@ def execute_move(move_msg, move_topic):
     move_topic.publish(roslibpy.Message(move_msg))
     time.sleep(EXECUTION_TIME)
     move_topic.publish(roslibpy.Message(STOP_ROBOT))
-    time.sleep(EXECUTION_TIME)
+    # time.sleep(EXECUTION_TIME)

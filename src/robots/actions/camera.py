@@ -17,7 +17,7 @@ Callback function, it process the image received and save it into
 the computer
 '''
 def receive_image(msg):
-    log.info('Received image seq=%d', msg['header']['seq'])
+    # log.info('Received image seq=%d', msg['header']['seq'])
     base64_bytes = msg['data'].encode('ascii')
     image_bytes = base64.b64decode(base64_bytes)
     # 'received-image-{}-{}'.format(msg['header']['seq'], msg['format'])
@@ -31,5 +31,5 @@ Input
 '''
 def take_picture(camera_topic):
     camera_topic.subscribe(receive_image)
-    time.sleep(1)
+    time.sleep(0.3)
     camera_topic.unsubscribe() # This avoid to take many photos after one movement

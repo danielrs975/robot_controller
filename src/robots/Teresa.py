@@ -6,14 +6,14 @@ NOTE: Needs to be adapted after to the physical robot way to move (In process)
 import roslibpy
 import time
 
-from robots.Robot import Robot
+from src.robots.Robot import Robot
 
 class Teresa(Robot):
     """
     Class that represents the robot Teresa. This is the version 1.
     """
     LINEAR_SPEED = 0.5 # Speed to move forward or backward
-    ROTATION_SPEED = 1.0
+    ROTATION_SPEED = 0.2 # Speed to rotate left or right
 
     """
     Array that contains all the posible movements of the robot.
