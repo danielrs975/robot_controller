@@ -21,7 +21,7 @@ You must have installed:
 6) Install python dependecies. ```pip install -r requirements.txt```
 
 ## Running the environments
-### For the Teresa Robot
+### For the Teresa Robot (This part is not necessary if you are running the world inside the folder gazebo_envs/)
 #### Prerequisites
 Before running this environment we have to install all the controllers of the Teresa Robot, executes ```./install_teresa.sh```. 
 
@@ -31,12 +31,10 @@ IMPORTANT:
 
 
 #### Executing the simulation
-This has to be in 4 different terminals (Wait until each of the first 3 commands finish to execute the last one):
+This has to be in 3 different terminals (Wait until each of the first 3 commands finish to execute the last one):
 1) First terminal ```roscore```
-2) Second terminal: ```roslaunch teresa_gazebo teresa_gazebo_mopomdp.launch```
+2) Second terminal: ```rosrun gazebo_ros gazebo ./gazebo/envs/Teresa_Lightweight.world```
 3) Third terminal: ```roslaunch rosbridge_server rosbridge_websocket.launch```
-4) Fourth terminal: first ```source venv/bin/activate``` then ```python src/main_teresa.py```
-
 ### For the Bebop 2 Power Drone
 #### Prerequisites
 To run this environment you need to install some programs:
