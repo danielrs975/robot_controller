@@ -54,6 +54,3 @@ This has to be in 5 different terminals in this order:
 5) Fifth terminal: ```roslaunch bebop_driver bebop_node.launch```
 
 After you run these commands, execute the python script ```python src/main_bebop.py```
-
-## Author
-- Daniel Rodriguez
