@@ -7,6 +7,8 @@ import base64
 import time
 import logging
 
+from src.utils.global_variables import EXECUTION_TIME
+
 # Print important information (Debug purpose only)
 fmt = "%(asctime)s %(levelname)8s: %(message)s"
 logging.basicConfig(format=fmt, level=logging.INFO)
@@ -31,5 +33,5 @@ Input
 '''
 def take_picture(camera_topic):
     camera_topic.subscribe(receive_image)
-    time.sleep(0.2)
+    time.sleep(EXECUTION_TIME)
     camera_topic.unsubscribe() # This avoid to take many photos after one movement
