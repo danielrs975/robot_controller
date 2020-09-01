@@ -67,8 +67,14 @@ class RobotEnv(gym.Env):
         color = (255, 0, 0)
 
         thickness = 2
-        
+        # center = 800 // 2
+        # error = 50
+        # range = center - error / 2
+        # Replace 800 with size of the image and 50 with range you want
+        space_reward = (375, 200)
         image = cv2.rectangle(image, start_point, end_point, color, thickness)
+
+        image = cv2.rectangle(image, space_reward, (space_reward[0] + 50, space_reward[1] + 50), (0, 0, 255), thickness)
 
         cv2.imshow(window_name, image)
         value = 5
