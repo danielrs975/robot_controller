@@ -8,18 +8,19 @@ import face_recognition
 import gym
 from gym import spaces
 import os
+from src.utils.global_variables import OBSERVATION_FILE
 from src.utils.useful_functions import is_modified
-
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
+    
 
     def __init__(self, robot):
         super(RobotEnv, self).__init__()
         self.robot = robot
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
-        if os.path.exists('env_observation'):
-            self.old_file = os.stat('env_observation').st_mtime
+        if os.path.exists(OBSERVATION_FILE):
+            self.old_file = os.stat(OBSERVATION_FILE).st_mtime
         else:
             self.old_file = -1
 
@@ -44,14 +45,14 @@ class RobotEnv(gym.Env):
         In here we identify if the object we want to follow is in sight or no. This is
         used to calculate the reward
         '''
-        while not os.path.exists('env_observation') or not is_modified(self.old_file, os.stat('env_observation').st_mtime): # Wait until the file exists
+        while not os.path.exists(OBSERVATION_FILE) or not is_modified(self.old_file, os.stat(OBSERVATION_FILE).st_mtime): # Wait until the file exists
             continue
 
-        self.old_file = os.stat("env_observation").st_mtime # In here we get the time we got the picture
-        
-        image = face_recognition.load_image_file("env_observation") # TODO: This part executes before an image is saved. Think how to correct it.
+        self.old_file = os.stat(OBSERVATION_FILE).st_mtime # In here we get the time we got the picture
+
+        image = face_recognition.load_image_file(OBSERVATION_FILE) # TODO: This part executes before an image is saved. Think how to correct it.
         face_locations = face_recognition.face_locations(image)
-        face_locations = [(1, 2, 3, 4)]
+        
         if len(face_locations) > 0:
             y, _, _, x = face_locations[0]
             self.encode_pos(x, y)
@@ -69,7 +70,7 @@ class RobotEnv(gym.Env):
         return self.state
 
     def render(self, mode='human'):
-        image = cv2.imread('./env_observation')
+        image = cv2.imread(OBSERVATION_FILE)
         window_name = 'image'
         x, y = self.decode_pos() # Replace this by the actual square position
 
