@@ -7,18 +7,61 @@ import cv2
 import face_recognition
 import gym
 from gym import spaces
+import numpy as np
 import os
 from src.utils.global_variables import OBSERVATION_FILE
 from src.utils.useful_functions import is_modified
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
+    '''
+    Explanation of the observation space
+    It consists of four important values
+    Type: Box(4)
+    Num         Observation     Min     Max
+    0           Margin Top      0       800
+    1           Margin Bottom   0       800
+    2           Margin Left     0       800
+    3           Margin Right    0       800
 
+    This describe the position of the object in a picture, in this case
+    in a picture of size 800x800.
+                            
+            Graphical Representation of the
+                    Observation Space
+                           800
+                 ________________________
+                |           | top        |
+                |          _|_           |
+                |_________|   |__________|
+            800 |    left |___|    right |
+                |           |            |
+                |           | bottom     |
+                |           |            |
+                |           |            |
+                |___________|____________|
+    '''
     def __init__(self, robot):
         super(RobotEnv, self).__init__()
         self.robot = robot
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
+        
+        high = np.array([
+            800,
+            800,
+            800,
+            800,
+        ])
+        
+        low = np.array([
+            0,
+            0,
+            0,
+            0,
+        ])
+        self.observation_space = spaces.Box(low, high, dtype=np.float32)
+
         if os.path.exists(OBSERVATION_FILE):
             self.old_file = os.stat(OBSERVATION_FILE).st_mtime
         else:
