@@ -8,6 +8,7 @@ import face_recognition
 import gym
 from gym import spaces
 import os
+from src.utils.useful_functions import is_modified
 
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -17,6 +18,10 @@ class RobotEnv(gym.Env):
         self.robot = robot
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
+        if os.path.exists('env_observation'):
+            self.old_file = os.stat('env_observation').st_mtime
+        else:
+            self.old_file = -1
 
     def encode_pos(self, x, y):
         image_size = 800
@@ -39,8 +44,10 @@ class RobotEnv(gym.Env):
         In here we identify if the object we want to follow is in sight or no. This is
         used to calculate the reward
         '''
-        while not os.path.exists('env_observation'): # Wait until the file exists
+        while not os.path.exists('env_observation') or not is_modified(self.old_file, os.stat('env_observation').st_mtime): # Wait until the file exists
             continue
+
+        self.old_file = os.stat("env_observation").st_mtime # In here we get the time we got the picture
         
         image = face_recognition.load_image_file("env_observation") # TODO: This part executes before an image is saved. Think how to correct it.
         face_locations = face_recognition.face_locations(image)
