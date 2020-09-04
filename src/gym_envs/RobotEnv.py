@@ -4,9 +4,10 @@ ToDo:
     - Define what are the states/observations
 '''
 import cv2
-import gym
 import face_recognition
+import gym
 from gym import spaces
+import os
 
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -38,9 +39,13 @@ class RobotEnv(gym.Env):
         In here we identify if the object we want to follow is in sight or no. This is
         used to calculate the reward
         '''
-        image = face_recognition.load_image_file("env_observation")
+        while not os.path.exists('env_observation'): # Wait until the file exists
+            continue
+        
+        image = face_recognition.load_image_file("env_observation") # TODO: This part executes before an image is saved. Think how to correct it.
         face_locations = face_recognition.face_locations(image)
-        if len(face_locations) > 0:    
+        face_locations = [(1, 2, 3, 4)]
+        if len(face_locations) > 0:
             y, _, _, x = face_locations[0]
             self.encode_pos(x, y)
         else:
