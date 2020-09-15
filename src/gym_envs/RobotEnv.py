@@ -11,9 +11,11 @@ import numpy as np
 import os
 from src.utils.global_variables import OBSERVATION_FILE
 from src.utils.useful_functions import is_modified
+
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    
+    SPACE_REWARD_X = 375
+    SPACE_REWARD_Y = 200
     '''
     Explanation of the observation space
     It consists of four important values
@@ -77,6 +79,20 @@ class RobotEnv(gym.Env):
         y = self.state % image_size
         return int(x), int(y)
 
+    def face_in_place(self, x, y):
+        '''
+        Method that calculates if the object is in the desire position
+        Parameters:
+        -   x (Float) --> x coordinate of the object position
+        -   y (Float) --> y coordinate of the object position
+        Returns
+        -   True  --> if the face is in place
+        -   False --> otherwise
+        '''
+        if (x >= self.SPACE_REWARD_X and x <= self.SPACE_REWARD_X + 50) and (y >= self.SPACE_REWARD_Y and y <= self.SPACE_REWARD_Y + 50):
+            return True
+        return False
+
     def step(self, action):
         reward = 0 # Reward of the state
         done = 0 # Boolean that indicates that an episode has finished
@@ -93,13 +109,22 @@ class RobotEnv(gym.Env):
 
         self.old_file = os.stat(OBSERVATION_FILE).st_mtime # In here we get the time we got the picture
 
-        image = face_recognition.load_image_file(OBSERVATION_FILE) # TODO: This part executes before an image is saved. Think how to correct it.
-        face_locations = face_recognition.face_locations(image)
-        
+        # image = face_recognition.load_image_file(OBSERVATION_FILE) # TODO: This part executes before an image is saved. Think how to correct it.
+        # face_locations = face_recognition.face_locations(image)
+        body_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
+        image = cv2.imread(OBSERVATION_FILE)
+        face_locations = body_classifier.detectMultiScale(image, 1.2, 3)
         if len(face_locations) > 0:
-            y, _, _, x = face_locations[0]
-            self.encode_pos(x, y)
+            x, y, w, h = face_locations[0]
+            # self.encode_pos(x, y)
+            self.state = (x, y, w, h)
+            if self.face_in_place(x, y):
+                reward = 1
+                done = 1
+            else:
+                reward = 0
         else:
+            self.state = (0, 0, 0, 0)
             done = 1
             reward = 0
 
@@ -107,7 +132,7 @@ class RobotEnv(gym.Env):
 
     def reset(self):
         self.robot.reset_simulation()
-        self.state = 0
+        self.state = (0, 0, 0, 0)
         self.last_u = None
 
         return self.state
@@ -115,22 +140,20 @@ class RobotEnv(gym.Env):
     def render(self, mode='human'):
         image = cv2.imread(OBSERVATION_FILE)
         window_name = 'image'
-        x, y = self.decode_pos() # Replace this by the actual square position
+        # x, y = self.decode_pos() # Replace this by the actual square position
+        
+        (x, y, w, h) = self.state
+        cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
 
-        start_point = (x, y)
-        end_point = (x + 40, y + 40)
+        
+        # color = (255, 0, 0)
 
-        color = (255, 0, 0)
+        # thickness = 2
 
-        thickness = 2
-        # center = 800 // 2
-        # error = 50
-        # range = center - error / 2
         # Replace 800 with size of the image and 50 with range you want
-        space_reward = (375, 200)
-        image = cv2.rectangle(image, start_point, end_point, color, thickness)
-
-        image = cv2.rectangle(image, space_reward, (space_reward[0] + 50, space_reward[1] + 50), (0, 0, 255), thickness)
+        # space_reward = (self.SPACE_REWARD_X, self.SPACE_REWARD_Y)
+        
+        # image = cv2.rectangle(image, space_reward, (space_reward[0] + 50, space_reward[1] + 50), (0, 0, 255), thickness)
 
         cv2.imshow(window_name, image)
         value = 5
