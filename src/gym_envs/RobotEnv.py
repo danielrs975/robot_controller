@@ -14,8 +14,10 @@ from src.utils.useful_functions import is_modified
 
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    SPACE_REWARD_X = 375
-    SPACE_REWARD_Y = 200
+    IMAGE_SIZE = (800, 800)
+    ERROR = 150
+    SPACE_REWARD_X = IMAGE_SIZE[0] // 2 - ERROR
+    SPACE_REWARD_Y = IMAGE_SIZE[1] // 2 + ERROR
     '''
     Explanation of the observation space
     It consists of four important values
@@ -79,7 +81,7 @@ class RobotEnv(gym.Env):
         y = self.state % image_size
         return int(x), int(y)
 
-    def face_in_place(self, x, y):
+    def face_in_place(self, x, y, w, h):
         '''
         Method that calculates if the object is in the desire position
         Parameters:
@@ -89,7 +91,9 @@ class RobotEnv(gym.Env):
         -   True  --> if the face is in place
         -   False --> otherwise
         '''
-        if (x >= self.SPACE_REWARD_X and x <= self.SPACE_REWARD_X + 50) and (y >= self.SPACE_REWARD_Y and y <= self.SPACE_REWARD_Y + 50):
+        point_a = (x, y)
+        point_b = (x + w, y + h)
+        if (point_a[0] >= self.SPACE_REWARD_X and point_a[0] <= self.SPACE_REWARD_Y):
             return True
         return False
 
@@ -118,7 +122,7 @@ class RobotEnv(gym.Env):
             x, y, w, h = face_locations[0]
             # self.encode_pos(x, y)
             self.state = (x, y, w, h)
-            if self.face_in_place(x, y):
+            if self.face_in_place(x, y, w, h):
                 reward = 1
                 done = 1
             else:
@@ -144,15 +148,17 @@ class RobotEnv(gym.Env):
         
         (x, y, w, h) = self.state
         cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
-
         
         # color = (255, 0, 0)
 
         # thickness = 2
 
         # Replace 800 with size of the image and 50 with range you want
-        # space_reward = (self.SPACE_REWARD_X, self.SPACE_REWARD_Y)
-        
+        #           height width
+        error = 150
+        space_reward = (self.SPACE_REWARD_X, self.SPACE_REWARD_Y)
+
+        cv2.rectangle(image, (space_reward[0], 0), (space_reward[1], 800), (255, 0, 0), 5)
         # image = cv2.rectangle(image, space_reward, (space_reward[0] + 50, space_reward[1] + 50), (0, 0, 255), thickness)
 
         cv2.imshow(window_name, image)
