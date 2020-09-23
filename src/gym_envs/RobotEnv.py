@@ -71,15 +71,22 @@ class RobotEnv(gym.Env):
         else:
             self.old_file = -1
 
-    def encode_pos(self, x, y):
+    def encode_pos(self, x, y, w, h):
         image_size = 800
-        self.state = x*image_size + y
+        return x*(image_size**3) + y*(image_size**2) + w*(image_size) + h
 
     def decode_pos(self):
+        if self.state == 0:
+            return (0, 0, 0, 0)
         image_size = 800
-        x = self.state / image_size
-        y = self.state % image_size
-        return int(x), int(y)
+        result = ()
+        state = self.state
+        while state != 0:
+            value = state % image_size
+            result = (value,) + result
+            state //= image_size
+
+        return result
 
     def face_in_place(self, x, y, w, h):
         '''
@@ -121,22 +128,21 @@ class RobotEnv(gym.Env):
         if len(face_locations) > 0:
             x, y, w, h = face_locations[0]
             # self.encode_pos(x, y)
-            self.state = (x, y, w, h)
+            self.state = self.encode_pos(x, y, w, h)
             if self.face_in_place(x, y, w, h):
                 reward = 1
                 done = 1
             else:
                 reward = 0
         else:
-            self.state = (0, 0, 0, 0)
+            self.state = self.encode_pos(0, 0, 0, 0)
             done = 1
             reward = 0
-
         return self.state, reward, done, {}
 
     def reset(self):
         self.robot.reset_simulation()
-        self.state = (0, 0, 0, 0)
+        self.state = self.encode_pos(0, 0, 0, 0)
         self.last_u = None
 
         return self.state
@@ -146,7 +152,7 @@ class RobotEnv(gym.Env):
         window_name = 'image'
         # x, y = self.decode_pos() # Replace this by the actual square position
         
-        (x, y, w, h) = self.state
+        (x, y, w, h) = self.decode_pos()
         cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
         
         # color = (255, 0, 0)
