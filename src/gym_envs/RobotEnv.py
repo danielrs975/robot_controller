@@ -9,24 +9,23 @@ from gym import spaces
 import numpy as np
 import os
 import time
-from src.utils.global_variables import OBSERVATION_FILE, 
+from src.utils.global_variables import OBSERVATION_FILE, IMAGE_SIZE, SQUARE_SIZE_X, SQUARE_SIZE_Y, STEP_X, STEP_Y
 from src.utils.useful_functions import is_modified
-
 
 import time
 
 class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    IMAGE_SIZE = (800, 800)
+    IMAGE_SIZE = IMAGE_SIZE
     ERROR = 150
     SPACE_REWARD_X = IMAGE_SIZE[0] // 2 - ERROR
     SPACE_REWARD_Y = IMAGE_SIZE[1] // 2 + ERROR
 
-    SQUARE_SIZE_X = 225 # This is the step in the X axis
-    SQUARE_SIZE_Y = 470 +25 # This is the step in the Y axis
+    SQUARE_SIZE_X = SQUARE_SIZE_X # This is the step in the X axis
+    SQUARE_SIZE_Y = SQUARE_SIZE_Y # This is the step in the Y axis
 
-    STEP_X = 1 # It moves the square 20 pixeles in the X axis
-    STEP_Y = 1 # It moves the square 40 pixeles in the Y axis
+    STEP_X = STEP_X # It moves the square 20 pixeles in the X axis
+    STEP_Y = STEP_Y # It moves the square 40 pixeles in the Y axis
 
     MAX_X = int(((IMAGE_SIZE[0] - SQUARE_SIZE_X) / STEP_X) + 1)
     MAX_Y = int(((IMAGE_SIZE[1] - SQUARE_SIZE_Y) / STEP_Y) + 1)
@@ -101,7 +100,7 @@ class RobotEnv(gym.Env):
         time_passed = 0
         while not os.path.exists(OBSERVATION_FILE) or not is_modified(self.old_file, os.stat(OBSERVATION_FILE).st_mtime): # Wait until the file exists
             time.sleep(1)
-            if time_passed == 30:
+            if time_passed == 10:
                 break
             time_passed += 1
 
