@@ -9,8 +9,10 @@ from gym import spaces
 import numpy as np
 import os
 import time
+import random
 from src.utils.global_variables import OBSERVATION_FILE, IMAGE_SIZE, SQUARE_SIZE_X, SQUARE_SIZE_Y, STEP_X, STEP_Y
 from src.utils.useful_functions import is_modified
+from src.gym_envs.GazeboController import GazeboController
 
 import time
 
@@ -31,30 +33,12 @@ class RobotEnv(gym.Env):
     MAX_Y = int(((IMAGE_SIZE[1] - SQUARE_SIZE_Y) / STEP_Y) + 1)
     NB_STATES = MAX_X*MAX_Y
     
-    '''
-    Explanation of the observation space
-    It consists of four important values
-    Type: Box(4)
-                            
-            Graphical Representation of the
-                    Observation Space
-                           800
-                 ________________________
-                |           | top        |
-                |          _|_           |
-                |_________|   |__________|
-            800 |    left |___|    right |
-                |           |            |
-                |           | bottom     |
-                |           |            |
-                |           |            |
-                |___________|____________|
-    '''
-    def __init__(self, robot):
+    def __init__(self, robot, client):
         super(RobotEnv, self).__init__()
         self.robot = robot
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
+        self.gzcontroller = GazeboController(client)
 
         if os.path.exists(OBSERVATION_FILE):
             self.old_file = os.stat(OBSERVATION_FILE).st_mtime
@@ -105,26 +89,12 @@ class RobotEnv(gym.Env):
             time_passed += 1
 
         self.old_file = os.stat(OBSERVATION_FILE).st_mtime # In here we get the time we got the picture
+        face_locations = self.define_state()
 
-        # image = face_recognition.load_image_file(OBSERVATION_FILE) # TODO: This part executes before an image is saved. Think how to correct it.
-        # face_locations = face_recognition.face_locations(image)
-        body_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
-        image = cv2.imread(OBSERVATION_FILE)
-        face_locations = body_classifier.detectMultiScale(image, 1.2, 3)
         if len(face_locations) > 0:
             x, y, w, h = face_locations[0]
-            # self.SQUARE_SIZE_X = w
-            # self.SQUARE_SIZE_Y = h
-
-            # self.encode_pos(x, y)
-            # self.state = self.encode_pos(x, y, w, h)
-
             self.state = self.pos_to_state(x, y)
-
-            print("State is: " + str(self.state))
-            print("Coordinates image: " + str(x) + " " + str(y))
-
-            #-------------The code below will change
+            #--------The code below will change------
             if self.face_in_place(x, y, w, h):
                 reward = 1
                 done = 1
@@ -139,7 +109,9 @@ class RobotEnv(gym.Env):
 
     def reset(self):
         self.robot.reset_simulation()
-        self.state = self.pos_to_state(0, 0)
+        random_number = random.uniform(-1.0, 1.0)
+        self.gzcontroller.set_position(random_number)
+        self.state = self.pos_to_state(0, 0) # Refactorization of the code step for state definition
         self.last_u = None
 
         return self.state
@@ -147,26 +119,15 @@ class RobotEnv(gym.Env):
     def render(self, mode='human'):
         image = cv2.imread(OBSERVATION_FILE)
         window_name = 'image'
-        # x, y = self.decode_pos() # Replace this by the actual square position
-        
-        # (x, y, w, h) = self.decode_pos()
         x, y = self.state_to_pos()
         w = self.SQUARE_SIZE_X
         h = self.SQUARE_SIZE_Y
 
         cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
         
-        # color = (255, 0, 0)
-
-        # thickness = 2
-
         # Replace 800 with size of the image and 50 with range you want
         #           height width
         error = 150
-        # space_reward = (self.SPACE_REWARD_X, self.SPACE_REWARD_Y)
-
-        # cv2.rectangle(image, (space_reward[0], 0), (space_reward[1], 800), (255, 0, 0), 5)
-        # image = cv2.rectangle(image, space_reward, (space_reward[0] + 50, space_reward[1] + 50), (0, 0, 255), thickness)
 
         cv2.imshow(window_name, image)
         value = 5
@@ -176,8 +137,12 @@ class RobotEnv(gym.Env):
         cv2.imshow(window_name, image)
         
         cv2.waitKey(1)
-        # cv2.destroyAllWindows()
         return 0
+
+    def define_state(self):
+        body_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
+        image = cv2.imread(OBSERVATION_FILE)
+        return body_classifier.detectMultiScale(image, 1.2, 3)
 
     def close(self):
         pass

@@ -10,7 +10,7 @@ class GazeboController:
     """
     PERSON_MODEL = "person_standing" # Name of the model to connect to
      
-    def __init__(self, client):
+    def __init__(self, client=None):
         """Constructor of the class
 
         Args:
@@ -23,7 +23,7 @@ class GazeboController:
         """Get the actual position of the model (This case is hard wired to the person).
 
         Returns:
-            [type]: [description]
+            Dictionary: with coordinates of the object in the simulation
         """
         body = {
             'model_name': self.PERSON_MODEL
@@ -45,20 +45,10 @@ class GazeboController:
             }
         }
         actual_position = self.get_position()
-        actual_position['position']['y'] = y_position
+        actual_position['position']['y'] += y_position
         body['model_state']['pose'] = {
             'position': actual_position['position'],
             'orientation': actual_position['orientation']
         }
         request = roslibpy.ServiceRequest(body)
         self.set_position_service.call(request)
-
-
-# if __name__ == "__main__":
-#     HOST = 'localhost'    
-#     PORT = 9090
-#     client = roslibpy.Ros(host=HOST, port=PORT)
-#     cntrl = GazeboController(client)
-#     client.run()
-#     cntrl.get_position()
-#     cntrl.set_position(29.2)
