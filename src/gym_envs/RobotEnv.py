@@ -74,7 +74,7 @@ class RobotEnv(gym.Env):
             List: a list containing the two coordinates
         """
         state = self.state
-        return int(self.STEP_Y*(state // self.MAX_X)), int(self.STEP_X*(state % self.MAX_X))
+        return int(self.STEP_X*(state % self.MAX_X)), int(self.STEP_Y*(state // self.MAX_X))
 
     def object_in_place(self, x, y, w, h):
         """Method that calculates if the object is in the desire position
@@ -112,6 +112,7 @@ class RobotEnv(gym.Env):
         if len(object_locations) > 0:
             x, y, w, h = object_locations[0]
             self.state = self.pos_to_state(x, y)
+            self.real_position = (x, y, w, h)
             #--------The code below will change------
             if self.object_in_place(x, y, w, h):
                 reward = 1
@@ -137,6 +138,7 @@ class RobotEnv(gym.Env):
         self.gzcontroller.set_position(random_number)
         self.state = self.pos_to_state(0, 0) # Refactorization of the code step for state definition
         self.last_u = None
+        self.real_position = (0,0,0,0)
 
         return self.state
 
@@ -156,6 +158,8 @@ class RobotEnv(gym.Env):
         h = self.SQUARE_SIZE_Y
 
         cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
+        xreal, yreal, wreal, hreal = self.real_position
+        cv2.rectangle(image, (xreal, yreal), (xreal+wreal, yreal+hreal), (255, 0, 0), 5)
 
         cv2.imshow(window_name, image)
         value = 5
