@@ -31,11 +31,11 @@ class GazeboController:
         request = roslibpy.ServiceRequest(body)
         return self.get_position_service.call(request)['pose']
 
-    def set_position(self, y_position):
+    def set_position(self, y_amount_move):
         """Set the new position for a model in the simulation (This case is hard wired to the person).
 
         Args:
-            y_position (Float): The position in the y_axis to move the model
+            y_amount_move (Float): The amount to move from the original position in the y-axis
         
         NOTE: We can expand this to the other axis
         """
@@ -45,7 +45,7 @@ class GazeboController:
             }
         }
         actual_position = self.get_position()
-        actual_position['position']['y'] += y_position
+        actual_position['position']['y'] += y_amount_move
         body['model_state']['pose'] = {
             'position': actual_position['position'],
             'orientation': actual_position['orientation']
