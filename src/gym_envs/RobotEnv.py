@@ -5,10 +5,10 @@ import numpy as np
 import os
 import time
 import random
-from src.utils.global_variables import OBSERVATION_FILE, \
+from src.utils.training_tools import OBSERVATION_FILE, \
                                         IMAGE_SIZE, SQUARE_SIZE_X, \
                                         SQUARE_SIZE_Y, STEP_X, STEP_Y, ERROR, \
-                                            in_range, FINAL_X, FINAL_Y
+                                            FINAL_X, FINAL_Y, in_range, pos_to_state, state_to_pos
 from src.utils.useful_functions import is_modified
 from src.gym_envs.GazeboController import GazeboController
 
@@ -53,30 +53,6 @@ class RobotEnv(gym.Env):
         else:
             self.old_file = -1
 
-    def pos_to_state(self, x, y):
-        """Transform a coordinate into a single integer
-
-        Args:
-            x (Integer): X coordinate
-            y (Integer): Y coordinate
-
-        Returns:
-            Integer: Representation of the position
-        """
-        new_col = int(x / self.STEP_X)
-        new_row = int(y / self.STEP_Y)
-        return int(new_col + new_row*self.MAX_X)
-
-    def state_to_pos(self):
-        """Tranform the single integer into the original coordinates
-        x and y
-
-        Returns:
-            List: a list containing the two coordinates
-        """
-        state = self.state
-        return int(self.STEP_X*(state % self.MAX_X)), int(self.STEP_Y*(state // self.MAX_X))
-
     def object_in_place(self, x, y, w, h):
         """Method that calculates if the object is in the desire position
         Parameters:
@@ -86,7 +62,7 @@ class RobotEnv(gym.Env):
         -   True  --> if the face is in place
         -   False --> otherwise
         """
-        x, y = self.state_to_pos()
+        x, y = state_to_pos(self.state)
         if (in_range(x, FINAL_X, ERROR) and in_range(y, FINAL_Y, ERROR)):
             return True
         return False
@@ -112,7 +88,7 @@ class RobotEnv(gym.Env):
         if len(object_locations) > 0:
             x, y, w, h = object_locations[0]
             print(f'x={x}, y={y}')
-            self.state = self.pos_to_state(x, y)
+            self.state = pos_to_state(x, y)
             print(f'state={self.state}')
             self.real_position = (x, y, w, h)
             #--------The code below will change------
@@ -138,7 +114,7 @@ class RobotEnv(gym.Env):
         self.robot.reset_simulation()
         random_number = random.uniform(-1.0, 1.0)
         self.gzcontroller.set_position(random_number)
-        self.state = self.pos_to_state(0, 0) # Refactorization of the code step for state definition
+        self.state = pos_to_state(0, 0) # Refactorization of the code step for state definition
         self.last_u = None
         self.real_position = (0,0,0,0)
 
@@ -155,7 +131,7 @@ class RobotEnv(gym.Env):
         """
         image = cv2.imread(OBSERVATION_FILE)
         window_name = 'image'
-        x, y = self.state_to_pos()
+        x, y = state_to_pos(self.state)
         w = self.SQUARE_SIZE_X
         h = self.SQUARE_SIZE_Y
 

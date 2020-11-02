@@ -7,7 +7,7 @@ import base64
 import time
 import logging
 
-from src.utils.global_variables import EXECUTION_TIME
+from src.utils.training_tools import EXECUTION_TIME
 
 # Print important information (Debug purpose only)
 fmt = "%(asctime)s %(levelname)8s: %(message)s"

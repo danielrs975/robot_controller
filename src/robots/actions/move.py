@@ -5,7 +5,7 @@ in a 2D space
 import roslibpy
 import time
 
-from src.utils.global_variables import EXECUTION_TIME
+from src.utils.training_tools import EXECUTION_TIME
 
 STOP_ROBOT = {
     'linear': {
