@@ -147,4 +147,6 @@ images*
 pgpendul.*
 checkpoint
 
+reward_setup.py
+
 # End of https://www.toptal.com/developers/gitignore/api/python

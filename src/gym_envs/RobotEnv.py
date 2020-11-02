@@ -7,7 +7,8 @@ import time
 import random
 from src.utils.global_variables import OBSERVATION_FILE, \
                                         IMAGE_SIZE, SQUARE_SIZE_X, \
-                                        SQUARE_SIZE_Y, STEP_X, STEP_Y, ERROR
+                                        SQUARE_SIZE_Y, STEP_X, STEP_Y, ERROR, \
+                                            in_range, FINAL_X, FINAL_Y
 from src.utils.useful_functions import is_modified
 from src.gym_envs.GazeboController import GazeboController
 
@@ -21,8 +22,8 @@ class RobotEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     IMAGE_SIZE = IMAGE_SIZE
     ERROR = ERROR
-    SPACE_REWARD_X = IMAGE_SIZE[0] // 2 - ERROR
-    SPACE_REWARD_Y = IMAGE_SIZE[1] // 2 + ERROR
+    FINAL_X = FINAL_X
+    FINAL_Y = FINAL_Y
 
     SQUARE_SIZE_X = SQUARE_SIZE_X # This is the step in the X axis
     SQUARE_SIZE_Y = SQUARE_SIZE_Y # This is the step in the Y axis
@@ -85,9 +86,8 @@ class RobotEnv(gym.Env):
         -   True  --> if the face is in place
         -   False --> otherwise
         """
-        point_a = (x, y)
-        point_b = (x + w, y + h)
-        if (point_a[0] >= self.SPACE_REWARD_X and point_a[0] <= self.SPACE_REWARD_Y):
+        x, y = self.state_to_pos()
+        if (in_range(x, FINAL_X, ERROR) and in_range(y, FINAL_Y, ERROR)):
             return True
         return False
 
@@ -111,7 +111,9 @@ class RobotEnv(gym.Env):
 
         if len(object_locations) > 0:
             x, y, w, h = object_locations[0]
+            print(f'x={x}, y={y}')
             self.state = self.pos_to_state(x, y)
+            print(f'state={self.state}')
             self.real_position = (x, y, w, h)
             #--------The code below will change------
             if self.object_in_place(x, y, w, h):
@@ -121,8 +123,8 @@ class RobotEnv(gym.Env):
                 reward = 0
             #----------------------------------------
         else:
-            self.state = self.pos_to_state(0, 0)
-            done = 1
+            # self.state = self.pos_to_state(0, 0)
+            # done = 1
             reward = 0
         return self.state, reward, done, {}
 
