@@ -116,7 +116,7 @@ class RobotEnv(gym.Env):
             print(f'state={self.state}')
             self.real_position = (x, y, w, h)
             #--------The code below will change------
-            if self.object_in_place(x, y, w, h):
+            if self.object_in_place(x, y, w, h) and self.state <= self.NB_STATES:
                 reward = 1
                 done = 1
             else:
