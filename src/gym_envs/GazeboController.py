@@ -46,6 +46,7 @@ class GazeboController:
         }
         actual_position = self.get_position()
         actual_position['position']['y'] += y_amount_move
+        # actual_position['position']['x'] += y_amount_move
         body['model_state']['pose'] = {
             'position': actual_position['position'],
             'orientation': actual_position['orientation']
