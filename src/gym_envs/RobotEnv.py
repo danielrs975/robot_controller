@@ -5,9 +5,9 @@ import numpy as np
 import os
 import time
 import random
-from src.utils.training_tools import OBSERVATION_FILE, \
-                                    in_range, \
-                                    pos_to_state, state_to_pos
+from src.utils.training_tools import OBSERVATION_FILE, IMAGE_SIZE, SQUARE_SIZE_X, \
+                                    SQUARE_SIZE_Y, STEP_X, STEP_Y, ERROR, FINAL_X, FINAL_Y, \
+                                    in_range, pos_to_state, state_to_pos
 from src.utils.useful_functions import is_modified, calculate_center
 from src.gym_envs.GazeboController import GazeboController
 
@@ -74,9 +74,7 @@ class RobotEnv(gym.Env):
 
         if len(object_locations) > 0:
             x, y, w, h = object_locations[0]
-            print(f'x={x}, y={y}')
             self.state = pos_to_state(x, y)
-            print(f'state={self.state}')
             self.real_position = (x, y, w, h)
             #--------The code below will change------
             if self.object_in_place(x, y, w, h) and self.state <= self.NB_STATES:
@@ -84,10 +82,10 @@ class RobotEnv(gym.Env):
                 done = 1
             elif self.state > self.NB_STATES:
                 self.state = 0
+                self.real_position = (0, 0, 0, 0) #Reset real position
                 done = 1
                 reward = 0
             else:
-                self.state = 0
                 reward = 0
             #----------------------------------------
         else:
@@ -167,16 +165,16 @@ class RobotEnv(gym.Env):
         return body_classifier.detectMultiScale(image, 1.2, 3)
 
     def set_up_parameters_training(self):
-        self.IMAGE_SIZE = (800, 800)
-        self.ERROR = 100
+        self.IMAGE_SIZE = IMAGE_SIZE
+        self.ERROR = ERROR
     
-        self.SQUARE_SIZE_X = 225 # This is the step in the X axis
-        self.SQUARE_SIZE_Y = 495 # This is the step in the Y axis
+        self.SQUARE_SIZE_X = SQUARE_SIZE_X # This is the step in the X axis
+        self.SQUARE_SIZE_Y = SQUARE_SIZE_Y # This is the step in the Y axis
     
         self.FINAL_X, self.FINAL_Y = calculate_center(self.IMAGE_SIZE, self.SQUARE_SIZE_X, self.SQUARE_SIZE_Y)
     
-        self.STEP_X = 5 # It moves the square 20 pixeles in the X axis
-        self.STEP_Y = 10 # It moves the square 40 pixeles in the Y axis
+        self.STEP_X = STEP_X # It moves the square 20 pixeles in the X axis
+        self.STEP_Y = STEP_Y # It moves the square 40 pixeles in the Y axis
     
         MAX_X = int(((self.IMAGE_SIZE[0] - self.SQUARE_SIZE_X) / self.STEP_X) + 1)
         MAX_Y = int(((self.IMAGE_SIZE[1] - self.SQUARE_SIZE_Y) / self.STEP_Y) + 1)
