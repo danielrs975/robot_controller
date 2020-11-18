@@ -95,12 +95,17 @@ class RobotEnv(gym.Env):
             if self.object_in_place(x, y, w, h) and self.state <= self.NB_STATES:
                 reward = 1
                 done = 1
+            elif self.state > self.NB_STATES:
+                self.state = 0
+                done = 1
+                reward = 0
             else:
+                self.state = 0
                 reward = 0
             #----------------------------------------
         else:
-            # self.state = self.pos_to_state(0, 0)
-            # done = 1
+            self.state = pos_to_state(0, 0)
+            done = 0
             reward = 0
         return self.state, reward, done, {}
 
