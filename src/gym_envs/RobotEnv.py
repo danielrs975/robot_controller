@@ -6,10 +6,9 @@ import os
 import time
 import random
 from src.utils.training_tools import OBSERVATION_FILE, \
-                                        IMAGE_SIZE, SQUARE_SIZE_X, \
-                                        SQUARE_SIZE_Y, STEP_X, STEP_Y, ERROR, \
-                                            FINAL_X, FINAL_Y, in_range, pos_to_state, state_to_pos
-from src.utils.useful_functions import is_modified
+                                    in_range, \
+                                    pos_to_state, state_to_pos
+from src.utils.useful_functions import is_modified, calculate_center
 from src.gym_envs.GazeboController import GazeboController
 
 import time
@@ -18,22 +17,7 @@ class RobotEnv(gym.Env):
     """
     Gym environment for the Teresa robot
     """
-
     metadata = {'render.modes': ['human']}
-    IMAGE_SIZE = IMAGE_SIZE
-    ERROR = ERROR
-    FINAL_X = FINAL_X
-    FINAL_Y = FINAL_Y
-
-    SQUARE_SIZE_X = SQUARE_SIZE_X # This is the step in the X axis
-    SQUARE_SIZE_Y = SQUARE_SIZE_Y # This is the step in the Y axis
-
-    STEP_X = STEP_X # It moves the square 20 pixeles in the X axis
-    STEP_Y = STEP_Y # It moves the square 40 pixeles in the Y axis
-
-    MAX_X = int(((IMAGE_SIZE[0] - SQUARE_SIZE_X) / STEP_X) + 1)
-    MAX_Y = int(((IMAGE_SIZE[1] - SQUARE_SIZE_Y) / STEP_Y) + 1)
-    NB_STATES = MAX_X*MAX_Y
     
     def __init__(self, robot, client):
         """Constructor of environment
@@ -47,6 +31,7 @@ class RobotEnv(gym.Env):
         self.state = 0
         self.action_space = spaces.Discrete(robot.NUMBER_MOVEMENTS)
         self.gzcontroller = GazeboController(client)
+        self.set_up_parameters_training()
 
         if os.path.exists(OBSERVATION_FILE):
             self.old_file = os.stat(OBSERVATION_FILE).st_mtime
@@ -58,12 +43,14 @@ class RobotEnv(gym.Env):
         Parameters:
         -   x (Float) --> x coordinate of the object position
         -   y (Float) --> y coordinate of the object position
+        -   w (Float) --> width of the object detected (NOT USED YET)
+        -   h (Float) --> height of the object detected (NOT USED YET)
         Returns
         -   True  --> if the face is in place
         -   False --> otherwise
         """
         x, y = state_to_pos(self.state)
-        if (in_range(x, FINAL_X, ERROR) and in_range(y, FINAL_Y, ERROR)):
+        if (in_range(x, self.FINAL_X, self.ERROR) and in_range(y, self.FINAL_Y, self.ERROR)):
             return True
         return False
 
@@ -104,7 +91,8 @@ class RobotEnv(gym.Env):
                 reward = 0
             #----------------------------------------
         else:
-            self.state = pos_to_state(0, 0)
+            self.state = pos_to_state(0, 0) #Reset state
+            self.real_position = (0, 0, 0, 0) #Reset real position
             done = 0
             reward = 0
         return self.state, reward, done, {}
@@ -177,6 +165,22 @@ class RobotEnv(gym.Env):
         body_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
         image = cv2.imread(OBSERVATION_FILE)
         return body_classifier.detectMultiScale(image, 1.2, 3)
+
+    def set_up_parameters_training(self):
+        self.IMAGE_SIZE = (800, 800)
+        self.ERROR = 100
+    
+        self.SQUARE_SIZE_X = 225 # This is the step in the X axis
+        self.SQUARE_SIZE_Y = 495 # This is the step in the Y axis
+    
+        self.FINAL_X, self.FINAL_Y = calculate_center(self.IMAGE_SIZE, self.SQUARE_SIZE_X, self.SQUARE_SIZE_Y)
+    
+        self.STEP_X = 5 # It moves the square 20 pixeles in the X axis
+        self.STEP_Y = 10 # It moves the square 40 pixeles in the Y axis
+    
+        MAX_X = int(((self.IMAGE_SIZE[0] - self.SQUARE_SIZE_X) / self.STEP_X) + 1)
+        MAX_Y = int(((self.IMAGE_SIZE[1] - self.SQUARE_SIZE_Y) / self.STEP_Y) + 1)
+        self.NB_STATES = MAX_X*MAX_Y
 
     def close(self):
         pass
