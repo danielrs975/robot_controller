@@ -120,11 +120,19 @@ class RobotEnv(gym.Env):
         Returns:
             Integer
         """
+       
+
         image = cv2.imread(OBSERVATION_FILE)
         window_name = 'image'
         x, y = state_to_pos(self.state)
         w = self.SQUARE_SIZE_X
         h = self.SQUARE_SIZE_Y
+
+        # We check if the person was detected or not
+        # When the person is not detected the coordinates
+        # are all 0
+        if sum(self.real_position) == 0:
+           x, y, w, h = (0, 0, 0, 0) # Not detected
 
         cv2.rectangle(image, (x, y), (x+w, y+h), (25, 125, 225), 5)
         xreal, yreal, wreal, hreal = self.real_position
