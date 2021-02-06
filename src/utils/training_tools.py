@@ -5,7 +5,7 @@ virtual environment
 
 from src.utils.useful_functions import calculate_center
 
-EXECUTION_TIME = 1 # Time that the robot takes to execute an action
+EXECUTION_TIME = 0.4 # Time that the robot takes to execute an action
 OBSERVATION_FILE = 'env_observation' # Name of the file where we get the response of the simulation
 
 """
