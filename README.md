@@ -74,7 +74,7 @@ If you are having any problem with the python installation or running the contai
 # Author and Advisor
 [Daniel RODRIGUEZ](danielrs975.github.io), Student at Institut Polytechnique de Paris
 
-**Adviser:** Prof. Hossam Afifi (Telecom SudParis)
+**Advisor:** Prof. Hossam Afifi (Telecom SudParis)
 
 # Note about this project
 This collaboration was made during my summer internship at Telecom SudParis. The project was the application of Reinforcement Learning in a Medical Robot to teach it the task of following an object. 
