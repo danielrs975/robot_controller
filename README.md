@@ -72,7 +72,7 @@ NOTE for the last step: If you want to use ```rostopic``` you have to install RO
 If you are having any problem with the python installation or running the containers please open a new issue describing your problem. I will check it when available to help.
 
 # Author and Advisor
-[Daniel RODRIGUEZ](danielrs975.github.io), Student at Institut Polytechnique de Paris
+[Daniel RODRIGUEZ](https://danielrs975.github.io), Student at Institut Polytechnique de Paris
 
 **Advisor:** Prof. Hossam Afifi (Telecom SudParis)
 
