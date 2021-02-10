@@ -72,9 +72,9 @@ NOTE for the last step: If you want to use ```rostopic``` you have to install RO
 If you are having any problem with the python installation or running the containers please open a new issue describing your problem. I will check it when available to help.
 
 # Author and Advisor
-[Daniel RODRIGUEZ](https://danielrs975.github.io), Student at Institut Polytechnique de Paris
+[Daniel RODRIGUEZ](https://danielrs975.github.io), Student at Telecom SudParis, Institut Polytechnique de Paris
 
-**Advisor:** Prof. Hossam Afifi (Telecom SudParis)
+**Advisor:** Prof. Hossam Afifi (Telecom SudParis, Institut Polytechnique de Paris)
 
 # Note about this project
 This collaboration was made during my summer internship at Telecom SudParis. The project was the application of Reinforcement Learning in a Medical Robot to teach it the task of following an object. 
