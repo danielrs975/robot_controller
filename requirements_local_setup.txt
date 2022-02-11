@@ -137,7 +137,7 @@ tornado==5.1.1
 tqdm==4.26.0
 traitlets==4.3.3
 twine==1.12.1
-Twisted==20.3.0
+Twisted==22.1.0
 txaio==20.4.1
 typed-ast==1.4.1
 ujson==1.35
