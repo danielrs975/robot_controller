@@ -80,7 +80,7 @@ neotime==1.0.0
 networkx==2.2
 node2vec==0.2.2
 notebook==6.0.3
-numpy==1.15.2
+numpy==1.22.0
 opencv-python==4.2.0.34
 opt-einsum==3.2.1
 packaging==20.4
